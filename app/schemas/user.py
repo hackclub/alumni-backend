@@ -1,5 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
+from app.schemas.employment import EmploymentRead
 
 
 class UserBase(BaseModel):
@@ -20,8 +21,6 @@ class UserCreate(UserBase):
     city: str | None = None
     state: str | None = None
     country: str | None = None
-    position: str | None = None
-    company: str | None = None
     ex_hq: bool = False
     phone_number: str | None = None
 
@@ -41,8 +40,6 @@ class UserUpdate(BaseModel):
     city: str | None = None
     state: str | None = None
     country: str | None = None
-    position: str | None = None
-    company: str | None = None
     ex_hq: bool | None = None
     phone_number: str | None = None
     profile_picture: str | None = None
@@ -62,9 +59,9 @@ class UserRead(UserBase):
     city: str | None = None
     state: str | None = None
     country: str | None = None
-    position: str | None = None
-    company: str | None = None
     ex_hq: bool
     phone_number: str | None = None
     profile_picture: str | None = None
+    employments: list[EmploymentRead] = []
+
     model_config = ConfigDict(from_attributes=True)

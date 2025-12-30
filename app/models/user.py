@@ -1,8 +1,13 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from datetime import datetime
 from uuid import uuid4
 from sqlalchemy import String, DateTime, func, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db import Base
+
+if TYPE_CHECKING:
+    from app.models.employment import Employment
 
 
 class User(Base):
@@ -23,9 +28,11 @@ class User(Base):
     city: Mapped[str | None] = mapped_column(String(100), nullable=True)
     state: Mapped[str | None] = mapped_column(String(100), nullable=True)
     country: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    position: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    company: Mapped[str | None] = mapped_column(String(100), nullable=True)
     ex_hq: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
     phone_number: Mapped[str | None] = mapped_column(String(30), nullable=True)
     profile_picture: Mapped[str | None] = mapped_column(nullable=True)
+
+    employments: Mapped[list["Employment"]] = relationship(
+        "Employment", back_populates="user", cascade="all, delete-orphan"
+    )

@@ -1,8 +1,9 @@
 from typing import Sequence
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException, status
 from app.models.user import User
+from app.models.employment import Employment
 from app.schemas.user import UserCreate, UserUpdate
 
 
@@ -22,7 +23,12 @@ def create_user(db: Session, data: UserCreate) -> User:
 
 
 def get_user(db: Session, user_id: str) -> User | None:
-    return db.get(User, user_id)
+    return (
+        db.query(User)
+        .options(joinedload(User.employments).joinedload(Employment.company))
+        .filter(User.user_id == user_id)
+        .first()
+    )
 
 
 def get_user_by_email(db: Session, email: str) -> User | None:
@@ -34,7 +40,13 @@ def get_user_by_slack_id(db: Session, slack_id: str) -> User | None:
 
 
 def list_users(db: Session, skip: int = 0, limit: int = 100) -> Sequence[User]:
-    return db.query(User).offset(skip).limit(limit).all()
+    return (
+        db.query(User)
+        .options(joinedload(User.employments).joinedload(Employment.company))
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
 
 def update_user(db: Session, user_id: str, data: UserUpdate) -> User:
