@@ -32,6 +32,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
     phone_number: Mapped[str | None] = mapped_column(String(30), nullable=True)
     profile_picture: Mapped[str | None] = mapped_column(nullable=True)
+    custom_background: Mapped[str | None] = mapped_column(String(1000), nullable=True)
 
     employments: Mapped[list["Employment"]] = relationship(
         "Employment", back_populates="user", cascade="all, delete-orphan"

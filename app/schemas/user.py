@@ -43,6 +43,7 @@ class UserUpdate(BaseModel):
     ex_hq: bool | None = None
     phone_number: str | None = None
     profile_picture: str | None = None
+    custom_background: str | None = None
 
 
 class UserRead(UserBase):
@@ -62,6 +63,7 @@ class UserRead(UserBase):
     ex_hq: bool
     phone_number: str | None = None
     profile_picture: str | None = None
+    custom_background: str | None = None
     employments: list[EmploymentRead] = []
 
     model_config = ConfigDict(from_attributes=True)
